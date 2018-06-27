@@ -1,0 +1,8 @@
+const char* host = "example.com";
+const int httpsPort = 443;
+const char* tlsFingerprint = "35 85 74 EF 67 35 A7 CE 40 69 50 F3 C0 F6 80 CF 80 3B 2E 19";
+
+const char* wifiSsid = "somewifi";
+const char* wifiPassword = "password";
+
+#define TLS
