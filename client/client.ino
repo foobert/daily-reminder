@@ -60,13 +60,13 @@ long getRemoteStatus() {
   }
 
   #ifdef TLS
-  if (!client.verify(fingerprint, host)) {
+  if (!client.verify(tlsFingerprint, host)) {
     debug("certificate doesn't match");
     return 2;
   }
   #endif
   
-  String url = "/status";
+  String url = "/reminder/status";
   client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                "Host: " + host + "\r\n" +
                "Accept: application/lolin\r\n" +
@@ -98,13 +98,13 @@ long postRemoteStatus() {
   }
 
   #ifdef TLS
-  if (!client.verify(fingerprint, host)) {
+  if (!client.verify(tlsFingerprint, host)) {
     debug("certificate doesn't match");
     return 2;
   }
   #endif
 
-  String url = "/status";
+  String url = "/reminder/status";
   client.print(String("POST ") + url + " HTTP/1.1\r\n" +
                "Host: " + host + "\r\n" +
                "Content-Type: application/lolin\r\n" +
