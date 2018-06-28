@@ -20,10 +20,10 @@ function getState() {
     if (calmDown(now, lastButtonPush)) {
       return "0\n";
     } else {
-      return "1\n";
+      return "2\n";
     }
   } else {
-    return "2\n";
+    return "1\n";
   }
 }
 
