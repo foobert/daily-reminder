@@ -130,12 +130,22 @@ void refreshDisplay() {
       case 0:
         debug("status 0");
         digitalWrite(D1, LOW);
-        digitalWrite(D2, HIGH);
+        digitalWrite(D2, LOW);
         break;
       case 1:
         debug("status 1");
+        digitalWrite(D1, LOW);
+        digitalWrite(D2, HIGH);
+        break;
+      case 2:
+        debug("status 2");
         digitalWrite(D1, HIGH);
         digitalWrite(D2, LOW);
+        break;
+      case 3:
+        debug("status 3");
+        digitalWrite(D1, HIGH);
+        digitalWrite(D2, HIGH);
         break;
       default:
         debug("Unknown status");

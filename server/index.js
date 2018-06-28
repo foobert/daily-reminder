@@ -1,22 +1,40 @@
 const express = require("express");
-const debug = require("debug")("lolin:server");
+const debug = require("debug")("dailyreminder:server");
+const { check, calmDown } = require("./lib/timer");
 
 const app = express();
 
-let s = 0;
+// yes, we should probably persist this somewhere
+// but for now resets at restart are okay
+let lastButtonPush = null;
+
+const resetTimes = [
+  6 * 60, // 06:00
+  18 * 60 // 18:00
+];
+
+function getState() {
+  const now = new Date();
+  const ok = check(now, lastButtonPush, resetTimes);
+  if (ok) {
+    if (calmDown(now, lastButtonPush)) {
+      return "0\n";
+    } else {
+      return "1\n";
+    }
+  } else {
+    return "2\n";
+  }
+}
 
 app.get("/status", (req, res) => {
   debug("got status request");
-  res.status(200).send("" + s + "\n");
+  res.status(200).send(getState());
 });
 
 app.post("/status", (req, res) => {
-  if (s == 0) {
-    s = 1;
-  } else {
-    s = 0;
-  }
-  res.status(200).send("" + s + "\n");
+  lastButtonPush = new Date();
+  res.status(200).send(getState());
 });
 
 app.listen(3000);
