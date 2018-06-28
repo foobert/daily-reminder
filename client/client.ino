@@ -173,6 +173,10 @@ void handleInterrupt() {
 
 void loop() {
   connectWifi();
+
+  currentStatus = getRemoteStatus();
+  refreshDisplay();
+
   if (inputPressed > 0) {
     inputPressed = 0;
     currentStatus = postRemoteStatus();
