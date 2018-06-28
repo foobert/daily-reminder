@@ -23,10 +23,10 @@ void debug(const char* msg) {
   #endif
 }
 
-void connectWifi() {
+bool connectWifi() {
   wl_status_t wifiStatus = WiFi.status();
   if (wifiStatus == WL_CONNECTED) {
-    return;
+    return false;
   }
 
   debug("Connecting to wifi");
@@ -45,6 +45,7 @@ void connectWifi() {
   debug("Wifi connected");
   digitalWrite(D1, LOW);
   digitalWrite(D2, LOW);
+  return true;
 }
 
 long getRemoteStatus() {
@@ -172,10 +173,10 @@ void handleInterrupt() {
 }
 
 void loop() {
-  connectWifi();
-
-  currentStatus = getRemoteStatus();
-  refreshDisplay();
+  if (connectWifi()) {
+    currentStatus = getRemoteStatus();
+    refreshDisplay();
+  }
 
   if (inputPressed > 0) {
     inputPressed = 0;
