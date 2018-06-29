@@ -48,7 +48,9 @@ bool connectWifi() {
   return true;
 }
 
-long getRemoteStatus() {
+long sendStatusRequest(const char* format, ...) {
+  va_list arg;
+
   #ifdef TLS
   WiFiClientSecure client;
   #else
@@ -66,64 +68,45 @@ long getRemoteStatus() {
     return 2;
   }
   #endif
-  
-  String url = "/reminder/status";
-  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-               "Host: " + host + "\r\n" +
-               "Accept: application/lolin\r\n" +
-               "User-Agent: lolin\r\n" +
-               "Connection: close\r\n\r\n");
+
+  va_start(arg, format);
+  client.printf(format, arg);
+  va_end(arg);
 
   while (client.connected()) {
+    // skip over headers
     String line = client.readStringUntil('\n');
     if (line == "\r") {
-      debug("headers received");
+//      debug("headers received");
       break;
     }
   }
-  
-  String line = client.readStringUntil('\n');
-  return line.toInt();
+
+  return client.parseInt();
+//  String line = client.readStringUntil('\n');
+//  return line.toInt();
+}
+
+long getRemoteStatus() {
+  return sendStatusRequest(
+    "GET /reminder/status HTTP/1.1\r\n"
+    "Host: %s\r\n"
+    "Accept: application/lolin\r\n"
+    "User-Agent: lolin\r\n"
+    "Connection: close\r\n\r\n",
+    host);
 }
 
 long postRemoteStatus() {
-  #ifdef TLS
-  WiFiClientSecure client;
-  #else
-  WiFiClient client;
-  #endif
-  
-  if (!client.connect(host, httpsPort)) {
-    debug("connection failed");
-    return 2;
-  }
-
-  #ifdef TLS
-  if (!client.verify(tlsFingerprint, host)) {
-    debug("certificate doesn't match");
-    return 2;
-  }
-  #endif
-
-  String url = "/reminder/status";
-  client.print(String("POST ") + url + " HTTP/1.1\r\n" +
-               "Host: " + host + "\r\n" +
-               "Content-Type: application/lolin\r\n" +
-               "User-Agent: lolin\r\n" +
-               "Content-Length: 13\r\n" +
-               "Connection: close\r\n\r\n" +
-               "input pressed");
-
-  while (client.connected()) {
-    String line = client.readStringUntil('\n');
-    if (line == "\r") {
-      debug("headers received");
-      break;
-    }
-  }
-  
-  String line = client.readStringUntil('\n');
-  return line.toInt();
+  return sendStatusRequest(
+    "POST /reminder/status HTTP/1.1\r\n"
+    "Host: %s\r\n"
+    "Content-Type: application/lolin\r\n"
+    "User-Agent: lolin\r\n"
+    "Content-Length: 13\r\n"
+    "Connection: close\r\n\r\n"
+    "input pressed",
+    host);
 }
 
 void refreshDisplay() {
