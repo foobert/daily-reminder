@@ -28,7 +28,6 @@ function getState() {
 }
 
 app.get("/status", (req, res) => {
-  debug("got status request");
   res.status(200).send(getState());
 });
 

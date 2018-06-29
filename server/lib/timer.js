@@ -1,3 +1,4 @@
+const debug = require("debug")("dailyreminder:check");
 const {
   addMinutes,
   startOfDay,
@@ -8,7 +9,9 @@ const {
 } = require("date-fns");
 
 function check(now, lastButtonPush, resetTimes) {
+  debug("check, now: %s, lastButtonPush: %s", now, lastButtonPush);
   if (!lastButtonPush) {
+    debug("check failed, no button push");
     return false;
   }
 
@@ -22,6 +25,7 @@ function check(now, lastButtonPush, resetTimes) {
   const anyReset = flatten(resets).some(r =>
     isWithinRange(r, lastButtonPush, now)
   );
+  debug("check: %s", !anyReset);
   return !anyReset;
 }
 
