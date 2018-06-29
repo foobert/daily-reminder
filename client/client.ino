@@ -33,11 +33,11 @@ bool connectWifi() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(wifiSsid, wifiPassword);
   
-  bool b = true;
+  uint8_t b = 1;
   while (WiFi.status() != WL_CONNECTED) {
-    digitalWrite(D1, b ? HIGH : LOW);
-    digitalWrite(D2, b ? HIGH : LOW);
-    b ^= true;
+    digitalWrite(D1, b);
+    digitalWrite(D2, b);
+    b ^= 1;
     delay(500);
     debug(".");
   }
