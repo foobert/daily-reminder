@@ -9,8 +9,8 @@ const app = express();
 let lastButtonPush = null;
 
 const resetTimes = [
-  6 * 60, // 06:00
-  18 * 60 // 18:00
+  4 * 60, // 04:00 UTC
+  16 * 60 // 16:00 UTC
 ];
 
 function getState() {
