@@ -134,6 +134,7 @@ void loop() {
   if (connectWifi()) {
     currentStatus = getRemoteStatus();
     refreshDisplay();
+    idleLoop = 0;
   }
 
   if (inputPressed > 0) {
